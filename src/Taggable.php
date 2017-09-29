@@ -101,7 +101,7 @@ trait Taggable
 	 */
 	public function tagNames()
 	{
-		return $this->tags()->lists('name')->all();
+		return $this->tags()->pluck('name')->all();
 	}
 
 	/**
@@ -111,7 +111,7 @@ trait Taggable
 	 */
 	public function tagSlugs()
 	{
-		return $this->tags()->lists('slug')->all();
+		return $this->tags()->pluck('slug')->all();
 	}
 
 	/**
@@ -173,7 +173,7 @@ trait Taggable
 		$tagNames = static::$taggingUtility->makeTagArray($tagNames);
 
 		$model = static::$taggingUtility->tagModelString();
-		$tagids = $model::byTagNames($tagNames)->lists('id')->all();
+		$tagids = $model::byTagNames($tagNames)->pluck('id')->all();
 
 		$className = $query->getModel()->getMorphClass();
 		$primaryKey = $this->getKeyName();
@@ -183,7 +183,7 @@ trait Taggable
 			$ids = Tagged::where('taggable_type', $className)
 							->whereIn('tag_id', $tagids)
 							->whereRaw('`tag_id` in (' .implode(',', $tagids). ') group by taggable_id having count(taggable_id) ='.$tagid_count)
-							->lists('taggable_id');
+							->pluck('taggable_id');
 
 			$query->whereIn($this->getTable().'.'.$primaryKey, $ids);
 		}
@@ -205,14 +205,14 @@ trait Taggable
 		$tagNames = static::$taggingUtility->makeTagArray($tagNames);
 
 		$model = static::$taggingUtility->tagModelString();
-		$tagids = $model::byTagNames($tagNames)->lists('id')->all();
+		$tagids = $model::byTagNames($tagNames)->pluck('id')->all();
 
 		$className = $query->getModel()->getMorphClass();
 		$primaryKey = $this->getKeyName();
 
 		$tags = Tagged::whereIn('tag_id', $tagids)
 			->where('taggable_type', $className)
-			->lists('taggable_id');
+			->pluck('taggable_id');
 
 		return $query->whereIn($this->getTable().'.'.$primaryKey, $tags);
 	}
@@ -365,7 +365,7 @@ trait Taggable
         }
 
 		$model = static::$taggingUtility->tagModelString();
-		$tag_names = $model::byTagIds($tag_ids)->lists('name')->all();
+		$tag_names = $model::byTagIds($tag_ids)->pluck('name')->all();
 
 		$this->retag($tag_names);
     }

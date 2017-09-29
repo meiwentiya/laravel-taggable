@@ -137,7 +137,7 @@ class Tag extends Node
 	// Get tag ids tag name array
 	public function scopeIdsByNames($query, $tagNames)
 	{
-		return $query->whereIn('name', $tagNames)->lists('id');
+		return $query->whereIn('name', $tagNames)->pluck('id');
 	}
 
 }
