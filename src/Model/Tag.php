@@ -59,7 +59,7 @@ class Tag extends Node
 
 		if($validator->passes()) {
 
-			if (!$this->isUserUpdateSlug($options)) {
+			if (!$this->isUserUpdateSlug($options) && empty($this->slug)) {
 				// If user has been set slug，it do not need set slug by automatically
 				$this->slug = $this->taggingUtility->normalizeAndUniqueSlug($this->name);
 			}
